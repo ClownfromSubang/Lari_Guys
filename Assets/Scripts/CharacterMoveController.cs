@@ -21,8 +21,20 @@ public class CharacterMoveController : MonoBehaviour
         rig.velocity = velocityVector;
     }
 
+    [Header("Jump")]
+    public float jumpAccel;
+
+    private bool isJumping;
+    private bool isOnGround;
+
     void Update()
     {
-        
+        if (input.GetMouseButtonDown(0))
+        {
+            if (isOnGround)
+            {
+                isJumping = true;
+            }
+        }
     }
 }
