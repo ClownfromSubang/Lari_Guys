@@ -14,11 +14,35 @@ public class CharacterMoveController : MonoBehaviour
         rig = GetComponent<Rigidbody2D>();
     }
 
+    [Header("Ground Raycast")]
+    public float groundRaycastDistance;
+    public LayerMask groundLayerMask;
+
     void FixedUpdate ()
     {
         Vector2 velocityVector = rig.velocity;
+
+        if (isJumping)
+        {
+            velocityVector.y += jumpAccel;
+            isJumping = false;
+        }
+
         velocityVector.x = Mathf.Clamp(velocityVector.x + moveAccel * Time.deltaTime, 0.0f, maxSpeed);
         rig.velocity = velocityVector;
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundRaycastDistance, groundLayerMask);
+            if (hit)
+            {
+                if (!isOnGround && rig.velocity.y <= 0)
+                {
+                  isOnGround = true;
+                }
+            }
+            else
+            {
+               isOnGround = false;
+            }
     }
 
     [Header("Jump")]
@@ -27,9 +51,14 @@ public class CharacterMoveController : MonoBehaviour
     private bool isJumping;
     private bool isOnGround;
 
+    private void OnDrawGizmos ()
+    {
+        Debug.DrawLine(transform.position, transform.position + (Vector3.down * groundRaycastDistance), Color.white);
+    }
+
     void Update()
     {
-        if (input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown (0))
         {
             if (isOnGround)
             {
