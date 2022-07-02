@@ -9,11 +9,13 @@ public class CharacterMoveController : MonoBehaviour
     public float maxSpeed;
     private Rigidbody2D rig;
     private Animator anim;
+    private CharacterSoundController sound;
     
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        sound = GetComponent<CharacterSoundController> () ;
     }
 
     [Header("Ground Raycast")]
@@ -65,6 +67,8 @@ public class CharacterMoveController : MonoBehaviour
             if (isOnGround)
             {
                 isJumping = true;
+
+                sound.PlayJump ();
             }
         }
         anim.SetBool("isOnGround", isOnGround);
