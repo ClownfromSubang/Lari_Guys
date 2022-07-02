@@ -8,10 +8,12 @@ public class CharacterMoveController : MonoBehaviour
     public float moveAccel;
     public float maxSpeed;
     private Rigidbody2D rig;
+    private Animator anim;
     
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     [Header("Ground Raycast")]
@@ -65,5 +67,6 @@ public class CharacterMoveController : MonoBehaviour
                 isJumping = true;
             }
         }
+        anim.SetBool("isOnGround", isOnGround);
     }
 }
