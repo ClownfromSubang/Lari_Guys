@@ -114,7 +114,6 @@ public class TerrainGeneratorController : MonoBehaviour
                 newItemFromPool.SetActive(true);
                 return newItemFromPool;
             }
-
         }
         else
         {
