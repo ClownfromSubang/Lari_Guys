@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,12 +40,50 @@ public class TerrainGeneratorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        spawnedTerrain = new List<GameObject>();
+
+        lastGeneratedPositionX = GetHorizontalPositionStart();
+
+        foreach (TerrainTemplatedController terrain in earlyTerrainTemplates)
+        {
+            GenerateTerrain(lastGeneratedPositionX, terrain);
+            lastGeneratedPositionX += terrainTemplateWidth;
+        }
+
+        while (lastGeneratedPositionX < GetHorizontalPositionEnd())
+        {
+            GenerateTerrain(lastGeneratedPositionX);
+            lastGeneratedPositionX += terrainTemplateWidth;
+        }
+    }
+
+    private void GenerateTerrain(float posX, TerrainTemplateController forceterrain = null)
+    {
+        GameObject item = null;
         
+        if(forceterrain == null)
+        {
+            item = terrainTemplates[Random.Range(0, terrainTemplates.Count)].gameObject;
+        }
+
+        else
+        {
+            item = forceterrain.gameObject;
+        }
+        GameObject newTerrain = Instantiate(item, transform);
+
+        newTerrain.transform.position = new Vector2(posX, 0f);
+
+        spawnedTerrain.Add(newTerrain);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        while (lastGeneratedPositionX < GetHorizontalPositionEnd())
+        {
+            GenerateTerrain(lastGeneratedPositionX);
+            lastGeneratedPositionX += terrainTemplateWidth;
+        }
     }
 }
