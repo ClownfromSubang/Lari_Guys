@@ -1,4 +1,4 @@
-﻿    using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,15 +37,24 @@ public class TerrainGeneratorController : MonoBehaviour
         Debug.DrawLine(areaEndPosition + Vector3.up * debugLineHeight / 2, areaEndPosition + Vector3.down * debugLineHeight / 2, Color.red);
     }
 
+    private List<GameObject> spawnedTerrain;
+    private float lastGeneratedPositionX;
+    [Header("Force Early Template")]
+    public List<TerrainTemplateController> earlyTerrainTemplates;
+    private float lastRemovedPositionX;
+    private Dictionary<string, List<GameObject>> pool;
+
     // Start is called before the first frame update
     void Start()
     {
+        pool = new Dictionary<string, List<GameObject>>();
+
         spawnedTerrain = new List<GameObject>();
-        lastRemovedPositionX = lastGeneratedPositionX - terrainTemplateWidth;
 
         lastGeneratedPositionX = GetHorizontalPositionStart();
+        lastRemovedPositionX = lastGeneratedPositionX - terrainTemplateWidth;
 
-        foreach (TerrainTemplatedController terrain in earlyTerrainTemplates)
+        foreach (TerrainTemplateController terrain in earlyTerrainTemplates)
         {
             GenerateTerrain(lastGeneratedPositionX, terrain);
             lastGeneratedPositionX += terrainTemplateWidth;
@@ -71,7 +80,7 @@ public class TerrainGeneratorController : MonoBehaviour
         {
             item = forceterrain.gameObject;
         }
-        GameObject newTerrain = Instantiate(item, transform);
+        GameObject newTerrain = GenerateFromPool (item, transform);
 
         newTerrain.transform.position = new Vector2(posX, 0f);
 
@@ -94,6 +103,39 @@ public class TerrainGeneratorController : MonoBehaviour
         }
     }
 
+    private GameObject GenerateFromPool(GameObject item, Transform parent)
+    {
+        if (pool.ContainsKey(item.name))
+        {
+            if (pool[item.name].Count > 0)
+            {
+                GameObject newItemFromPool = pool[item.name][0];
+                pool[item.name].Remove(newItemFromPool);
+                newItemFromPool.SetActive(true);
+                return newItemFromPool;
+            }
+
+        }
+        else
+        {
+            pool.Add(item.name, new List<GameObject>());
+        }
+        GameObject newItem = Instantiate(item, parent);
+        newItem.name = item.name;
+        return newItem;
+    }
+
+    private void ReturnToPool (GameObject item)
+    {
+        if (!pool.ContainsKey(item.name))
+        {
+            Debug.LogError("INVALID POOL ITEM!!");
+        }
+
+        pool[item.name].Add(item);
+        item.SetActive(false);
+    }
+
     private void RemoveTerrain(float posX)
     {
         GameObject terrainToRemove = null;
@@ -110,7 +152,7 @@ public class TerrainGeneratorController : MonoBehaviour
         if (terrainToRemove != null)
         {
             spawnedTerrain.Remove(terrainToRemove);
-            Destroy(terrainToRemove);
+            ReturnToPool(terrainToRemove);
         }
     }
 }
