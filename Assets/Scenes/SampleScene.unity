@@ -524,6 +524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jump: {fileID: 8300000, guid: de8f3ab8f26551d4d9ae66b0e892f8b1, type: 3}
+  scoreHighlight: {fileID: 8300000, guid: 2c1aa9edafaa5fc40ac2eb33565e0963, type: 3}
 --- !u!1 &482393372 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5515917484751631387, guid: 26960e77a289acd4eabecc3c3f56d5c9,
@@ -970,6 +971,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2271dfa800904c418e02ead79197e63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreHighlightRange: 50
+  sound: {fileID: 167726217}
 --- !u!4 &902125872
 Transform:
   m_ObjectHideFlags: 0
@@ -2604,7 +2607,7 @@ PrefabInstance:
     - target: {fileID: 4010889933792102417, guid: 26960e77a289acd4eabecc3c3f56d5c9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.42
+      value: -5.87
       objectReference: {fileID: 0}
     - target: {fileID: 4010889933792102417, guid: 26960e77a289acd4eabecc3c3f56d5c9,
         type: 3}

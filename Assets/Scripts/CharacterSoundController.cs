@@ -4,23 +4,21 @@ using UnityEngine;
 
 public class CharacterSoundController : MonoBehaviour
 {
-
     public AudioClip jump;
-
     private AudioSource audioPlayer;
-    
-    void Start()
+    public AudioClip scoreHighlight;
+
+    private void Start()
     {
-       audioPlayer = GetComponent<AudioSource> ();
+        audioPlayer = GetComponent<AudioSource>();
+    }
+    public void PlayScoreHighlight()
+    {
+        audioPlayer.PlayOneShot(scoreHighlight);
     }
 
-    public void PlayJump ()
+    public void PlayJump()
     {
-       audioPlayer.PlayOneShot(jump) ;
-    }
-    
-    void Update()
-    {
-        
+        audioPlayer.PlayOneShot(jump);
     }
 }
